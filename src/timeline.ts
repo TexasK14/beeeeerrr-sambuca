@@ -265,7 +265,7 @@ export const SHOTS: ShotDef[] = [
     build: (u, f, local) => {
       const w = 1 - easeOutCubic(invLerp(0, 7, local));
       const a = lerp(-0.62, 0.55, easeInOutCubic(u)) - w * 0.9;
-      const center: V3 = [0, 0.75, -0.2];
+      const center: V3 = [-0.15, 0.75, -0.2];
       const peak = smooth(invLerp(0.2, 0.75, u));
       return {
         story: lerp(10, 13, u),
@@ -288,7 +288,7 @@ export const SHOTS: ShotDef[] = [
       const freezeAt = 8; // frames after cut
       const lt = Math.min(local, freezeAt);
       const zoom = easeOutCubic(lt / freezeAt);
-      const center: V3 = [0, 0.75, -0.2];
+      const center: V3 = [-0.15, 0.75, -0.2];
       const slam = beat(27);
       return {
         story: 13 + lt / FPS,

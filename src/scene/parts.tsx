@@ -20,12 +20,12 @@ export const dropletMaterial = () =>
   new THREE.MeshPhysicalMaterial({
     color: '#ffffff',
     transparent: true,
-    opacity: 0.55,
+    opacity: 0.4,
     roughness: 0.02,
     metalness: 0,
-    clearcoat: 1,
+    clearcoat: 0.5,
     clearcoatRoughness: 0,
-    envMapIntensity: 3.2,
+    envMapIntensity: 1.8,
     specularIntensity: 1,
     ior: 1.33,
     depthWrite: false,
@@ -339,7 +339,7 @@ export const Backdrop: React.FC<{t: number; bloomBoost: number}> = ({t, bloomBoo
             vec3 base = vec3(0.012, 0.012, 0.016);
             float amber = exp(-(pow(vPos.x + 2.4, 2.0) * 0.12 + pow(vPos.y - 1.6, 2.0) * 0.22));
             float blue = exp(-(pow(vPos.x - 2.8, 2.0) * 0.12 + pow(vPos.y - 1.9, 2.0) * 0.2));
-            vec3 col = base + vec3(1.0, 0.45, 0.08) * amber * 0.32 * uBoost + vec3(0.12, 0.3, 1.0) * blue * 0.26 * uBoost;
+            vec3 col = base + vec3(1.0, 0.45, 0.08) * amber * 0.14 * uBoost + vec3(0.12, 0.3, 1.0) * blue * 0.12 * uBoost;
             gl_FragColor = vec4(col, 1.0);
           }`,
       }),
@@ -360,7 +360,7 @@ export const Backdrop: React.FC<{t: number; bloomBoost: number}> = ({t, bloomBoo
           map: tex,
           color: warm ? new THREE.Color(1.0, 0.55, 0.15) : new THREE.Color(0.25, 0.5, 1.0),
           transparent: true,
-          opacity: 0.08 + r() * 0.14,
+          opacity: 0.04 + r() * 0.08,
           depthWrite: false,
           blending: THREE.AdditiveBlending,
           fog: false,

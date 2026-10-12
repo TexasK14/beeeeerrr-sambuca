@@ -96,7 +96,7 @@ const PostFX: React.FC<{shot: ShotState}> = ({shot}) => {
     const composer = new EffectComposer(gl, {frameBufferType: THREE.HalfFloatType, multisampling: 4});
     composer.addPass(new RenderPass(scene, camera));
     const dof = new DepthOfFieldEffect(camera, {focusDistance: 3, focusRange: 1.0, bokehScale: 2.5, resolutionScale: 0.5});
-    const bloom = new BloomEffect({mipmapBlur: true, luminanceThreshold: 0.62, luminanceSmoothing: 0.3, intensity: 1, radius: 0.78});
+    const bloom = new BloomEffect({mipmapBlur: true, luminanceThreshold: 0.82, luminanceSmoothing: 0.2, intensity: 1, radius: 0.72});
     const ca = new ChromaticAberrationEffect({offset: new THREE.Vector2(0.001, 0.001), radialModulation: true, modulationOffset: 0.15});
     const tone = new ToneMappingEffect({mode: ToneMappingMode.ACES_FILMIC});
     const bc = new BrightnessContrastEffect({brightness: -0.015, contrast: 0.16});
@@ -123,7 +123,7 @@ const PostFX: React.FC<{shot: ShotState}> = ({shot}) => {
     fx.dof.cocMaterial.focusDistance = focus;
     fx.dof.cocMaterial.focusRange = Math.max(0.25, focus * 0.38);
     fx.dof.bokehScale = f.bokeh;
-    fx.bloom.intensity = f.bloom;
+    fx.bloom.intensity = f.bloom * 0.6;
     const c = 0.0007 + f.ca * 0.0045;
     fx.ca.offset.set(c, c * 0.6);
     fx.hs.saturation = 0.12 - f.desat * 0.6;
@@ -148,7 +148,7 @@ export const Scene: React.FC<{shot: ShotState}> = ({shot}) => {
       <CameraRig shot={shot} />
       <ambientLight intensity={0.06} />
       {/* soft cool key from the front */}
-      <Spot position={[1.5, 4.5, 4]} angle={0.55} penumbra={1} intensity={1.6} color="#dfe8ff" target={[0, 0.8, 0]} />
+      <Spot position={[1.5, 4.5, 4]} angle={0.55} penumbra={1} intensity={1.3} color="#fff1e0" target={[0, 0.8, 0]} />
       {/* warm amber rim behind the beer */}
       <Spot position={[-1.3, 1.9, -2.4]} angle={0.5} penumbra={0.8} intensity={9} color="#ff8a1c" target={[PINT.pos[0], 0.8, 0]} />
       <pointLight position={[-0.6, 0.75, -0.75]} intensity={2.6} distance={2.2} decay={1} color="#ff9a2e" />

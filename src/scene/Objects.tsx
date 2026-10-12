@@ -24,16 +24,16 @@ import {beerLabelTexture, foamTexture, frostTexture, sambucaLabelTexture, softDo
 // ---------------------------------------------------------------------------
 const clearGlass = (opacity = 0.16) =>
   new THREE.MeshPhysicalMaterial({
-    color: '#dfe9f2',
+    color: '#7d8894',
     transparent: true,
     opacity,
-    roughness: 0.04,
+    roughness: 0.05,
     metalness: 0,
-    clearcoat: 1,
-    clearcoatRoughness: 0.02,
-    envMapIntensity: 2.6,
-    specularIntensity: 1,
-    side: THREE.DoubleSide,
+    clearcoat: 0.25,
+    clearcoatRoughness: 0.05,
+    envMapIntensity: 0.9,
+    specularIntensity: 0.6,
+    side: THREE.FrontSide,
     depthWrite: false,
   });
 
@@ -50,11 +50,11 @@ const frostShell = (opacity: number, tint = '#e8f2ff') =>
 
 const beerMat = () =>
   new THREE.MeshPhysicalMaterial({
-    color: '#f0960f',
-    emissive: '#c25a00',
+    color: '#ffa200',
+    emissive: '#e88400',
     emissiveIntensity: 0.55,
     transparent: true,
-    opacity: 0.86,
+    opacity: 0.93,
     roughness: 0.12,
     clearcoat: 0.6,
     envMapIntensity: 1.4,
@@ -63,8 +63,8 @@ const beerMat = () =>
 
 const streamBeerMat = () =>
   new THREE.MeshPhysicalMaterial({
-    color: '#ffb12e',
-    emissive: '#ff8400',
+    color: '#ffb000',
+    emissive: '#ff9200',
     emissiveIntensity: 0.85,
     roughness: 0.06,
     clearcoat: 1,
@@ -75,15 +75,15 @@ const streamBeerMat = () =>
 
 const sambucaMat = (opacity: number) =>
   new THREE.MeshPhysicalMaterial({
-    color: '#eef4ff',
-    emissive: '#10204a',
-    emissiveIntensity: 0.4,
+    color: '#dfe8ff',
+    emissive: '#0a1640',
+    emissiveIntensity: 0.5,
     transparent: true,
     opacity,
     roughness: 0.0,
-    clearcoat: 1,
+    clearcoat: 0.6,
     clearcoatRoughness: 0,
-    envMapIntensity: 3.4,
+    envMapIntensity: 1.4,
     specularIntensity: 1,
     depthWrite: false,
   });
@@ -104,7 +104,7 @@ export const beerBottlePose = (t: number) => {
     const angle = lerp(-1.42, -1.72, smooth(invLerp(2.6, 3.0, t))) + lerp(0, -0.4, smooth(invLerp(3.0, 5.6, t)));
     return {pos: placeByMouth(BEER_MOUTH_POUR, angle, BEER_BOTTLE_H), angle, pouring: true};
   }
-  return {pos: [-1.15, 0, -1.25] as V3, angle: 0, pouring: false};
+  return {pos: [-1.65, 0, -1.3] as V3, angle: 0, pouring: false};
 };
 
 const SAMBUCA_MOUTH_POUR: V3 = [0.73, 1.12, SHOT.pos[2]];
@@ -163,7 +163,7 @@ export const BeerBottle: React.FC<{t: number}> = ({t}) => {
   const capWorld: V3 = [
     pose.pos[0] + 0.55 * dtPop,
     BEER_BOTTLE_H + 0.03 + 7.5 * dtPop - 0.5 * 18 * dtPop * dtPop,
-    pose.pos[2] + 1.0 * dtPop,
+    pose.pos[2] + 0.25 * dtPop,
   ];
   const fill = t < STORY.bottlesLeaveIntro ? 1.7 : 0;
 
@@ -194,7 +194,7 @@ export const BeerBottle: React.FC<{t: number}> = ({t}) => {
           count={10}
           radius={0.05 + dtPop * 0.25}
           height={0.5 + dtPop * 0.6}
-          opacity={0.55 * Math.exp(-dtPop * 2.5)}
+          opacity={0.13 * Math.exp(-dtPop * 2.5)}
           seed={77}
           size={0.35 + dtPop * 0.6}
           color="#eef4ff"
@@ -215,8 +215,8 @@ export const BeerBottle: React.FC<{t: number}> = ({t}) => {
 export const SambucaBottle: React.FC<{t: number}> = ({t}) => {
   const pose = sambucaBottlePose(t);
   const geo = useMemo(() => new THREE.LatheGeometry(sambucaBottleProfile(), 72), []);
-  const glass = useMemo(() => clearGlass(0.2), []);
-  const liquid = useMemo(() => sambucaMat(0.22), []);
+  const glass = useMemo(() => clearGlass(0.14), []);
+  const liquid = useMemo(() => sambucaMat(0.14), []);
   const label = useMemo(
     () => new THREE.MeshStandardMaterial({map: sambucaLabelTexture(), roughness: 0.45, envMapIntensity: 0.7, side: THREE.DoubleSide}),
     [],
@@ -275,17 +275,17 @@ const foamThickness = (t: number) => {
 
 const Bubbles: React.FC<{t: number; top: number; inner: (y: number) => number; churn: number}> = ({t, top, inner, churn}) => {
   const ref = useRef<THREE.InstancedMesh>(null);
-  const COUNT = 320;
+  const COUNT = 220;
   const geo = useMemo(() => new THREE.SphereGeometry(1, 10, 8), []);
   const mat = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: '#fff2cc',
-        emissive: '#ffd27a',
-        emissiveIntensity: 0.6,
+        color: '#ffe0a0',
+        emissive: '#ffb347',
+        emissiveIntensity: 0.35,
         roughness: 0.1,
         transparent: true,
-        opacity: 0.75,
+        opacity: 0.6,
         depthWrite: false,
       }),
     [],
@@ -297,7 +297,7 @@ const Bubbles: React.FC<{t: number; top: number; inner: (y: number) => number; c
       rr: Math.sqrt(r()) * 0.9,
       speed: 0.12 + r() * 0.3,
       phase: r(),
-      s: 0.004 + Math.pow(r(), 2.5) * 0.012,
+      s: 0.0025 + Math.pow(r(), 3) * 0.007,
       wob: r() * 10,
       streamer: r() < 0.3, // nucleation trails from the bottom
     }));
@@ -336,13 +336,13 @@ const Foam: React.FC<{bottom: number; thickness: number; inner: (y: number) => n
   const mat = useMemo(() => {
     const tex = foamTexture();
     return new THREE.MeshStandardMaterial({
-      color: '#fff6e6',
+      color: '#fffaf0',
       map: tex,
       bumpMap: tex,
-      bumpScale: 2.5,
-      roughness: 0.85,
-      emissive: '#3a2a12',
-      emissiveIntensity: 0.25,
+      bumpScale: 1.2,
+      roughness: 0.8,
+      emissive: '#5a4022',
+      emissiveIntensity: 0.35,
     });
   }, []);
   const geo = useMemo(() => {
@@ -350,7 +350,7 @@ const Foam: React.FC<{bottom: number; thickness: number; inner: (y: number) => n
     const top = bottom + h;
     const rB = inner(bottom) - 0.002;
     const rT = inner(top) - 0.002;
-    const dome = 0.035 + h * 0.15;
+    const dome = 0.05 + h * 0.25;
     const pts = [
       new THREE.Vector2(rB * 0.98, 0),
       new THREE.Vector2(rT, h),
@@ -382,8 +382,8 @@ const Foam: React.FC<{bottom: number; thickness: number; inner: (y: number) => n
 
 export const PintGlass: React.FC<{t: number}> = ({t}) => {
   const geo = useMemo(() => new THREE.LatheGeometry(glassProfile(PINT.rb, PINT.rt, PINT.h, PINT.wall, PINT.base), 80), []);
-  const glass = useMemo(() => clearGlass(0.17), []);
-  const frost = useMemo(() => frostShell(0.16, '#ffffff'), []);
+  const glass = useMemo(() => clearGlass(0.12), []);
+  const frost = useMemo(() => frostShell(0.06, '#fff4e0'), []);
   const beer = useMemo(beerMat, []);
   const streamMat = useMemo(streamBeerMat, []);
   const inner = useMemo(() => glassInnerRadius(PINT.rb, PINT.rt, PINT.h, PINT.wall), []);
@@ -460,7 +460,7 @@ const Bean: React.FC<{landAt: number; t: number; spot: [number, number, number];
   seed,
 }) => {
   const mat = useMemo(
-    () => new THREE.MeshPhysicalMaterial({color: '#3a1d0c', roughness: 0.28, clearcoat: 0.8, clearcoatRoughness: 0.2, envMapIntensity: 1.6}),
+    () => new THREE.MeshPhysicalMaterial({color: '#2a1407', roughness: 0.45, clearcoat: 0.3, clearcoatRoughness: 0.4, envMapIntensity: 0.5}),
     [],
   );
   const crease = useMemo(() => new THREE.MeshStandardMaterial({color: '#120804', roughness: 0.7}), []);
@@ -520,8 +520,8 @@ const Ripples: React.FC<{t: number; surface: number}> = ({t, surface}) => {
 export const ShotGlass: React.FC<{t: number; camPos: V3}> = ({t, camPos}) => {
   const geo = useMemo(() => new THREE.LatheGeometry(glassProfile(SHOT.rb, SHOT.rt, SHOT.h, SHOT.wall, SHOT.base), 72), []);
   const glass = useMemo(() => clearGlass(0.2), []);
-  const liquid = useMemo(() => sambucaMat(0.42), []);
-  const surfaceMat = useMemo(() => sambucaMat(0.55), []);
+  const liquid = useMemo(() => sambucaMat(0.1), []);
+  const surfaceMat = useMemo(() => sambucaMat(0.2), []);
   const streamMat = useMemo(() => sambucaMat(0.6), []);
   const inner = useMemo(() => glassInnerRadius(SHOT.rb, SHOT.rt, SHOT.h, SHOT.wall), []);
   const top = sambucaTop(t);

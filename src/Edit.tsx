@@ -18,14 +18,20 @@ const Title: React.FC<{since: number}> = ({since}) => {
   };
   const base: React.CSSProperties = {
     fontFamily,
-    fontSize: 260,
+    fontSize: 330,
     lineHeight: 0.92,
     letterSpacing: 6,
     textTransform: 'uppercase',
-    display: 'inline-block',
+    display: 'block',
   };
   return (
     <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', paddingBottom: 220}}>
+      <AbsoluteFill
+        style={{
+          opacity: clamp(since / 4) * 0.75,
+          background: 'radial-gradient(ellipse 70% 38% at 50% 44%, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%)',
+        }}
+      />
       <div style={{textAlign: 'center'}}>
         <div
           style={{
@@ -39,7 +45,7 @@ const Title: React.FC<{since: number}> = ({since}) => {
         >
           FIRE
         </div>
-        <div style={{...base, ...word(0), fontSize: 150, color: '#ffffff', filter: 'drop-shadow(0 0 18px rgba(255,255,255,0.7))'}}>&amp;</div>
+        <div style={{...base, ...word(0), fontSize: 170, color: '#ffffff', filter: 'drop-shadow(0 0 18px rgba(255,255,255,0.7))'}}>&amp;</div>
         <div
           style={{
             ...base,

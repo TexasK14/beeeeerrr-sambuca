@@ -47,9 +47,9 @@ const frag = /* glsl */ `
     a = max(a, lick * 0.6);
 
     float core = smoothstep(0.55, 1.0, body) * (1.0 - smoothstep(0.0, 0.45, y));
-    vec3 violet = vec3(0.42, 0.18, 1.0);
-    vec3 blue = vec3(0.12, 0.42, 1.0);
-    vec3 cyan = vec3(0.65, 0.9, 1.0);
+    vec3 violet = vec3(0.3, 0.08, 0.9);
+    vec3 blue = vec3(0.04, 0.22, 1.0);
+    vec3 cyan = vec3(0.35, 0.7, 1.0);
     vec3 col = mix(violet, blue, smoothstep(0.0, 0.6, body) * (1.0 - y * 0.6));
     col = mix(col, cyan, core * 0.85);
     // base glow line where the flame touches the liquid
@@ -96,16 +96,16 @@ export const Flame: React.FC<{pos: V3; t: number; ignite: number; camPos: V3; ra
   const dt = t - ignite;
   if (dt < 0) return null;
   const grow = easeOutBack(clamp(dt / 0.28), 2.2);
-  const burst = 1 + 2.2 * Math.exp(-dt * 7);
+  const burst = 1 + 2.5 * Math.exp(-dt * 6);
   const flicker = 1 + wobble(t * 9, 1) * 0.12 + wobble(t * 23, 2) * 0.06;
   const h = radius * 2.6 * grow * flicker * (1 + 0.6 * Math.exp(-dt * 5));
   const w = radius * 1.9 * grow * (1 + 0.4 * Math.exp(-dt * 6));
   const yaw = Math.atan2(camPos[0] - pos[0], camPos[2] - pos[2]);
   layers.forEach((m, i) => {
     m.uniforms.uTime.value = t;
-    m.uniforms.uIntensity.value = (i === 0 ? 1.6 : 0.9) * burst * clamp(dt / 0.05);
+    m.uniforms.uIntensity.value = (i === 0 ? 1.15 : 0.7) * burst * clamp(dt / 0.05);
   });
-  glowMat.opacity = 0.75 * clamp(dt / 0.08) * (0.85 + 0.15 * flicker);
+  glowMat.opacity = 0.45 * clamp(dt / 0.08) * (0.85 + 0.15 * flicker);
   return (
     <group position={pos}>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.004, 0]} material={glowMat} renderOrder={10}>
